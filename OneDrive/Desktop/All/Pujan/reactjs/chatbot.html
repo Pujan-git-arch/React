@@ -51,26 +51,73 @@
 
         
            }
+           function ChatMessages(){
+            const chatMessages = [{
+                 message:'Hello chatbot',
+                 sender: 'user',
+                 id: 'id1'
+            }, 
+            {
+              message:'Hello, How can I help you?',
+                 sender: 'bot',
+                 id: 'id2'
+            },
+              {message :"Can you get me todays date?",
+                sender :"user",
+                id: 'id3'
+              },
+               {
+              message:'Today is Novemeber 3rd of 2025',
+                 sender: 'bot',
+                 id: 'id4'
+            },
+
+            ];
+
+          /* const chatMessageComponents= chatMessages.map((chatMessage) =>{
+                return(
+                  <ChatMessage  
+                  message= {chatMessage.message}
+                  sender= {chatMessage.sender}
+                  />
+                );
+            });*/ /*--------------1*/
+
+             {/* {chatMessageComponents};*/ /*--------------1 above eqn 1 lai chalaune one method   next way chai can be done directly using components*/ }
+             return(
+               <>
+               {
+                 chatMessages.map((chatMessage) =>{
+                   return(
+                     <ChatMessage  
+                     message= {chatMessage.message}
+                     sender= {chatMessage.sender}
+                     key = {chatMessage.id}
+                     />
+                     );
+                    })
+                  }
+                  </>
+                  );
+
+           }
+
+           function App() {
+            return(
+               <> 
+              <ChatInput />
+              <ChatMessages />
+
+        </>
+            );
+           }
              
            
            
-        const app = (
-            <> 
-
-              <ChatInput />
-            <ChatMessage message="Hello chatbot" sender="user"/>
-            <ChatMessage message="Hello, How can I help you?" sender ="bot"/>
-           <ChatMessage message="Can you get me todays date?"  sender="user"/>
-            <ChatMessage message="Today is Novemeber 3rd of 2025" sender="bot"/>
-            
-
-
-        </>
-
-        );
+        
           
       const container = document.querySelector('.js-container');
-      ReactDOM.createRoot(container).render(app);
+      ReactDOM.createRoot(container).render(<App />);
     </script>
   </body>
 </html>
