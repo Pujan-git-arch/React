@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chatbot</title>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    <!-- Load React, ReactDOM, Babel (for JSX), and Day.js libraries -->
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
+
+    <script type="text/babel">
+
+      /* 
+         ChatInput Component:
+         - Handles user typing and sending messages.
+         - Uses React state to store input text temporarily.
+         - When Send is clicked, it updates the parent’s chatMessages state.
+      */
+      function ChatInput({ chatMessages, setChatMessages }) {
+
+        const [inputText, setInputText] = React.useState('');
+
+        // Update inputText as the user types
+        function saveInputText(event) {
+          setInputText(event.target.value);
+        }
+
+        // Add new message to chat when user clicks Send
+        function sendMessage() {
+          if (inputText.trim() === '') return; // prevent empty messages
+
+          setChatMessages([
+            ...chatMessages,  // keep previous messages
+            {
+              message: inputText,
+              sender: 'user',
+              id: crypto.randomUUID()
+            }
+          ]);
+          setInputText(''); // clear the input after sending
+        }
+
+        return (
+          <>
+            <input 
+              placeholder="Send a message to chatbot" 
+              size="30" 
+              onChange={saveInputText} 
+              value={inputText}
+            />
+            <button onClick={sendMessage}> Send </button>
+          </>
+        );
+      }
+
+
+      /* 
+         ChatMessage Component:
+         - Displays one message (from user or bot).
+         - Shows corresponding image depending on the sender.
+      */
+      function ChatMessage({ message, sender }) {
+        return (
+          <div>
+            {sender === 'user' &&  
+              <img src="images/userimg.jpg" width="70" height="70"/>
+            }
+            {message}
+            {sender === 'bot' &&
+              <img src="images/botimg.webp" width="70" height="70"/>
+            }
+          </div>
+        );
+      }
+
+
+      /* 
+         ChatMessages Component:
+         - Holds the full list of chat messages in state.
+         - Renders ChatInput (for typing new messages).
+         - Maps each message to a ChatMessage component.
+      */
+      function ChatMessages() {
+
+        // useState to store all chat messages
+        const [chatMessages, setChatMessages] = React.useState([
+          {
+            message: 'Hello chatbot',
+            sender: 'user',
+            id: 'id1'
+          }, 
+          {
+            message: 'Hello, How can I help you?',
+            sender: 'bot',
+            id: 'id2'
+          },
+          {
+            message: "Can you get me todays date?",
+            sender: "user",
+            id: 'id3'
+          },
+          {
+            message: 'Today is November 3rd of 2025',
+            sender: 'bot',
+            id: 'id4'
+          },
+        ]);
+
+        return (
+          <>
+            {/* Pass down message state to ChatInput */}
+            <ChatInput chatMessages={chatMessages} setChatMessages={setChatMessages} />
+
+            {/* Display all chat messages */}
+            {
+              chatMessages.map((chatMessage) => (
+                <ChatMessage  
+                  message={chatMessage.message}
+                  sender={chatMessage.sender}
+                  key={chatMessage.id}
+                />
+              ))
+            }
+          </>
+        );
+      }
+
+
+      /* 
+         App Component:
+         - Root component that renders the ChatMessages section.
+      */
+      function App() {
+        return (
+          <> 
+            <ChatMessages />
+          </>
+        );
+      }
+
+      // Connect React app to the HTML container
+      const container = document.querySelector('.js-container');
+      ReactDOM.createRoot(container).render(<App />);
+    </script>
+  </body>
+</html>

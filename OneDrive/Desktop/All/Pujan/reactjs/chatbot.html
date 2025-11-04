@@ -11,118 +11,186 @@
 
     <script src="https://unpkg.com/supersimpledev/babel.js"></script>
     <script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
+
     <script type="text/babel">
-           function ChatInput() {
-            return (
-                <>
-                    <input placeholder="Send a message to chatbot" size="30" />
-                    <button> Send </button>
-                </>
-            );
-           }
-        
-           function ChatMessage(props){  //or can be directly done as ""function ChatMessage({ message, sender})""   not doublequote
-          // const message= props.message;
-         // const{ message} =props;   both the lines are same 
-         //  const sender= props.sender;
-          const{ message , sender} = props;  //this is called destructuring of props 
-            
-      /*     if(sender === 'user'){ 
-            return (
-                <div>
-                 {message}
+      function ChatInput() {
 
-                 <img src="images/userimg.jpg" width="70" height="70"/>
-                 </div>
-            );
 
-           }*/  //this can also be done in the same JSX as below like
-          
-            return(
-               <div>
-                
-                {sender ==='user' &&  <img src="images/userimg.jpg" width="70" height="70"/>}
-                {message}
-                {sender ==='bot' &&<img src="images/botimg.webp" width="70" height="70"/>}
-                </div>
-                
-            );
-           
+        const [inputText, setInputText] = React.useState('');
 
-        
-           }
-           function ChatMessages(){
-            const chatMessages = [{
-                 message:'Hello chatbot',
-                 sender: 'user',
-                 id: 'id1'
-            }, 
+        function saveInputText(event) {
+         setInputText(event.target.value) ;
+
+
+        }
+        function sendMessage(){
+           setChatMessages([
+            ...chatMessages , {/*spreadoperator*/},
             {
-              message:'Hello, How can I help you?',
-                 sender: 'bot',
-                 id: 'id2'
-            },
-              {message :"Can you get me todays date?",
-                sender :"user",
-                id: 'id3'
-              },
-               {
-              message:'Today is Novemeber 3rd of 2025',
-                 sender: 'bot',
-                 id: 'id4'
-            },
+              message: 'test',
+              sender : 'user',
+              id: crypto.randomUUID()
+            } 
+            ]);
+        }
+        return (
+          <>
+            <input placeholder="Send a message to chatbot" size="30" onCHange={saveInputText} />
+            <button onClick={sendMessage}> Send </button>
+          </>
+        );
+      }
 
-            ];
+      function ChatMessage(props) {  
+        //or can be directly done as ""function ChatMessage({ message, sender})""   not doublequote
+        // const message= props.message;
+        // const{ message} =props;   both the lines are same 
+        //  const sender= props.sender;
+        const { message, sender } = props;  //this is called destructuring of props 
+            
+        /*     
+        if(sender === 'user'){ 
+          return (
+            <div>
+              {message}
+              <img src="images/userimg.jpg" width="70" height="70"/>
+            </div>
+          );
+        }
+        */  
+        //this can also be done in the same JSX as below like
+          
+        return (
+          <div>
+            {sender === 'user' &&  
+              <img src="images/userimg.jpg" width="70" height="70"/>
+            }
+            {message}
+            {sender === 'bot' &&
+              <img src="images/botimg.webp" width="70" height="70"/>
+            }
+          </div>
+        );
+      }
 
-          /* const chatMessageComponents= chatMessages.map((chatMessage) =>{
-                return(
+      function ChatMessages() {
+
+        const arrray = React.useState(
+          
+          [
+          {
+            message: 'Hello chatbot',
+            sender: 'user',
+            id: 'id1'
+          }, 
+          {
+            message: 'Hello, How can I help you?',
+            sender: 'bot',
+            id: 'id2'
+          },
+          {
+            message: "Can you get me todays date?",
+            sender: "user",
+            id: 'id3'
+          },
+          {
+            message: 'Today is Novemeber 3rd of 2025',
+            sender: 'bot',
+            id: 'id4'
+          },
+        ]
+        ) // -------------------2 this is using state of chatmessages
+
+
+        const [chatMessages, setChatMessages]= array;{/* destructuring of down arrays two lines such that array[0] value is in chatMessages and array[1] value is in setchatMessages*/}
+         {/*const chatMessages = array[0];
+         const setChatMessages = array[1];*/}
+
+        
+        
+        
+        /*
+        const chatMessages = [
+          {
+            message: 'Hello chatbot',
+            sender: 'user',
+            id: 'id1'
+          }, 
+          {
+            message: 'Hello, How can I help you?',
+            sender: 'bot',
+            id: 'id2'
+          },
+          {
+            message: "Can you get me todays date?",
+            sender: "user",
+            id: 'id3'
+          },
+          {
+            message: 'Today is Novemeber 3rd of 2025',
+            sender: 'bot',
+            id: 'id4'
+          },
+        ];---------2 we convert this to state just above this*/ 
+
+        function sendMessage() {
+           // setChatMessages([
+           // ...chatMessages , {/*spreadoperator*/},
+           // {
+            //  message: 'test',
+            //  sender : 'user',
+            //  id: crypto.randomUUID()
+            } 
+           // ]); this was only for practice--------4
+        }
+       { /*  chatMessages.push({
+            message: 'test',
+            sender: 'user',
+            id: crypto.randomUUID()
+          });
+          console.log(chatMessages); ---3 this should be done using set change messages so */}
+        
+
+        /* const chatMessageComponents= chatMessages.map((chatMessage) =>{
+              return(
+                <ChatMessage  
+                message= {chatMessage.message}
+                sender= {chatMessage.sender}
+                />
+              );
+          });*/ /*--------------1*/
+
+        {/* {chatMessageComponents};*/ /*--------------1 above eqn 1 lai chalaune one method   next way chai can be done directly using components*/ }
+
+        return (
+          <>
+            <button onClick={sendMessage}>Send Message</button>
+            {
+              chatMessages.map((chatMessage) => {
+                return (
                   <ChatMessage  
-                  message= {chatMessage.message}
-                  sender= {chatMessage.sender}
+                    message={chatMessage.message}
+                    sender={chatMessage.sender}
+                    key={chatMessage.id}
                   />
                 );
-            });*/ /*--------------1*/
+              })
+            }
+          </>
+        );
+      }
 
-             {/* {chatMessageComponents};*/ /*--------------1 above eqn 1 lai chalaune one method   next way chai can be done directly using components*/ }
-             return(
-               <>
-               {
-                 chatMessages.map((chatMessage) =>{
-                   return(
-                     <ChatMessage  
-                     message= {chatMessage.message}
-                     sender= {chatMessage.sender}
-                     key = {chatMessage.id}
-                     />
-                     );
-                    })
-                  }
-                  </>
-                  );
+      function App() {
+        return (
+          <> 
+            <ChatInput />
+            <ChatMessages />
+          </>
+        );
+      }
 
-           }
-
-           function App() {
-            return(
-               <> 
-              <ChatInput />
-              <ChatMessages />
-
-        </>
-            );
-           }
-             
-           
-           
-        
-          
       const container = document.querySelector('.js-container');
       ReactDOM.createRoot(container).render(<App />);
     </script>
   </body>
 </html>
-
-upto 1hr:30min
-
-
-
