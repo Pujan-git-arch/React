@@ -13,29 +13,34 @@
     <script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
 
     <script type="text/babel">
-      function ChatInput() {
-
+      function ChatInput({ chatMessages, setChatMessages }) {   {/* added props so input can access messages */}
 
         const [inputText, setInputText] = React.useState('');
 
         function saveInputText(event) {
-         setInputText(event.target.value) ;
-
-
+          setInputText(event.target.value);
         }
-        function sendMessage(){
-           setChatMessages([
-            ...chatMessages , {/*spreadoperator*/},
+
+        function sendMessage() {
+          setChatMessages([
+            ...chatMessages,  {/*spreadoperator*/},
             {
-              message: 'test',
-              sender : 'user',
+              message: inputText,
+              sender: 'user',
               id: crypto.randomUUID()
-            } 
-            ]);
+            }
+          ]);
+          setInputText(''); // clear input after sending
         }
+
         return (
           <>
-            <input placeholder="Send a message to chatbot" size="30" onCHange={saveInputText} />
+            <input 
+              placeholder="Send a message to chatbot" 
+              size="30" 
+              onChange={saveInputText} 
+              value={inputText}
+            />
             <button onClick={sendMessage}> Send </button>
           </>
         );
@@ -75,40 +80,36 @@
 
       function ChatMessages() {
 
-        const arrray = React.useState(
-          
+        const array = React.useState(
           [
-          {
-            message: 'Hello chatbot',
-            sender: 'user',
-            id: 'id1'
-          }, 
-          {
-            message: 'Hello, How can I help you?',
-            sender: 'bot',
-            id: 'id2'
-          },
-          {
-            message: "Can you get me todays date?",
-            sender: "user",
-            id: 'id3'
-          },
-          {
-            message: 'Today is Novemeber 3rd of 2025',
-            sender: 'bot',
-            id: 'id4'
-          },
-        ]
+            {
+              message: 'Hello chatbot',
+              sender: 'user',
+              id: 'id1'
+            }, 
+            {
+              message: 'Hello, How can I help you?',
+              sender: 'bot',
+              id: 'id2'
+            },
+            {
+              message: "Can you get me todays date?",
+              sender: "user",
+              id: 'id3'
+            },
+            {
+              message: 'Today is November 3rd of 2025',
+              sender: 'bot',
+              id: 'id4'
+            },
+          ]
         ) // -------------------2 this is using state of chatmessages
 
 
-        const [chatMessages, setChatMessages]= array;{/* destructuring of down arrays two lines such that array[0] value is in chatMessages and array[1] value is in setchatMessages*/}
-         {/*const chatMessages = array[0];
-         const setChatMessages = array[1];*/}
+        const [chatMessages, setChatMessages] = array; {/* destructuring of down arrays two lines such that array[0] value is in chatMessages and array[1] value is in setchatMessages*/}
+        {/*const chatMessages = array[0];
+        const setChatMessages = array[1];*/}
 
-        
-        
-        
         /*
         const chatMessages = [
           {
@@ -127,30 +128,30 @@
             id: 'id3'
           },
           {
-            message: 'Today is Novemeber 3rd of 2025',
+            message: 'Today is November 3rd of 2025',
             sender: 'bot',
             id: 'id4'
           },
         ];---------2 we convert this to state just above this*/ 
 
         function sendMessage() {
-           // setChatMessages([
-           // ...chatMessages , {/*spreadoperator*/},
-           // {
-            //  message: 'test',
-            //  sender : 'user',
-            //  id: crypto.randomUUID()
-            } 
-           // ]); this was only for practice--------4
+          // setChatMessages([
+          // ...chatMessages , {/*spreadoperator*/},
+          // {
+          //  message: 'test',
+          //  sender : 'user',
+          //  id: crypto.randomUUID()
+          // } 
+          // ]); this was only for practice--------4
         }
-       { /*  chatMessages.push({
-            message: 'test',
-            sender: 'user',
-            id: crypto.randomUUID()
-          });
-          console.log(chatMessages); ---3 this should be done using set change messages so */}
-        
 
+        { /*  chatMessages.push({
+              message: 'test',
+              sender: 'user',
+              id: crypto.randomUUID()
+            });
+            console.log(chatMessages); ---3 this should be done using set change messages so */ }
+        
         /* const chatMessageComponents= chatMessages.map((chatMessage) =>{
               return(
                 <ChatMessage  
@@ -164,7 +165,7 @@
 
         return (
           <>
-            <button onClick={sendMessage}>Send Message</button>
+            <ChatInput chatMessages={chatMessages} setChatMessages={setChatMessages} />
             {
               chatMessages.map((chatMessage) => {
                 return (
@@ -183,7 +184,6 @@
       function App() {
         return (
           <> 
-            <ChatInput />
             <ChatMessages />
           </>
         );

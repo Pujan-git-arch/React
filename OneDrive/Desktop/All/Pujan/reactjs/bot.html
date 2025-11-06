@@ -11,6 +11,7 @@
     <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
     <script src="https://unpkg.com/supersimpledev/babel.js"></script>
     <script src="https://unpkg.com/supersimpledev/dayjs.js"></script>
+    <script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
 
     <script type="text/babel">
 
@@ -33,14 +34,31 @@
         function sendMessage() {
           if (inputText.trim() === '') return; // prevent empty messages
 
-          setChatMessages([
+          const newChatMessages = [
             ...chatMessages,  // keep previous messages
             {
               message: inputText,
               sender: 'user',
               id: crypto.randomUUID()
             }
+          ];
+
+          // ✅ FIX: Correct variable name (was newchatMessages)
+          setChatMessages(newChatMessages);
+
+          // Get chatbot response
+          const response = Chatbot.getResponse(inputText);
+
+          // ✅ FIX: Append bot reply properly
+          setChatMessages([
+            ...newChatMessages,
+            {
+              message: response,
+              sender: 'bot', // ✅ FIX: use 'bot' not 'robot'
+              id: crypto.randomUUID()
+            }
           ]);
+
           setInputText(''); // clear the input after sending
         }
 
@@ -67,11 +85,11 @@
         return (
           <div>
             {sender === 'user' &&  
-              <img src="images/userimg.jpg" width="70" height="70"/>
+              <img src="images/userimg.jpg" width="70" height="70" alt="User" />
             }
             {message}
-            {sender === 'bot' &&
-              <img src="images/botimg.webp" width="70" height="70"/>
+            {sender === 'bot' &&   /* ✅ FIX: 'bot' not 'robot' */
+              <img src="images/botimg.webp" width="70" height="70" alt="Bot" />
             }
           </div>
         );
@@ -80,13 +98,28 @@
 
       /* 
          ChatMessages Component:
-         - Holds the full list of chat messages in state.
-         - Renders ChatInput (for typing new messages).
-         - Maps each message to a ChatMessage component.
+         - Displays all chat messages.
       */
-      function ChatMessages() {
+      function ChatMessages({ chatMessages }) {
+        return (
+          <>
+            {chatMessages.map((chatMessage) => (
+              <ChatMessage  
+                message={chatMessage.message}
+                sender={chatMessage.sender}
+                key={chatMessage.id}
+              />
+            ))}
+          </>
+        );
+      }
 
-        // useState to store all chat messages
+
+      /* 
+         App Component:
+         - Root component that renders the ChatInput and ChatMessages.
+      */
+      function App() {
         const [chatMessages, setChatMessages] = React.useState([
           {
             message: 'Hello chatbot',
@@ -111,33 +144,12 @@
         ]);
 
         return (
-          <>
-            {/* Pass down message state to ChatInput */}
-            <ChatInput chatMessages={chatMessages} setChatMessages={setChatMessages} />
-
-            {/* Display all chat messages */}
-            {
-              chatMessages.map((chatMessage) => (
-                <ChatMessage  
-                  message={chatMessage.message}
-                  sender={chatMessage.sender}
-                  key={chatMessage.id}
-                />
-              ))
-            }
-          </>
-        );
-      }
-
-
-      /* 
-         App Component:
-         - Root component that renders the ChatMessages section.
-      */
-      function App() {
-        return (
           <> 
-            <ChatMessages />
+            <ChatInput 
+              chatMessages={chatMessages}
+              setChatMessages={setChatMessages}
+            />
+            <ChatMessages chatMessages={chatMessages} />
           </>
         );
       }
