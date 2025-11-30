@@ -1,86 +1,86 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 import Square from './Square'
 import Button from './Button'
+
 function App() {
   const [xIsNext, setXIsNext] = useState(true);
   const [square, setSquare] = useState(Array(9).fill(null));
+  const [savedGame, setSavedGame] = useState(null);
 
-  function handleClick(i){
-    if (square[i] || calculateWinner(square)){
-      return;
-    }
+  function handleClick(i) {
+    if (square[i] || calculateWinner(square)) return;
+
     const nextSquare = square.slice();
-    if(xIsNext){
-      
-      nextSquare[i] = "X";
-    }
-    else{
-      nextSquare[i] = "O";
-    }
+    nextSquare[i] = xIsNext ? "X" : "O";
+
     setSquare(nextSquare);
     setXIsNext(!xIsNext);
+  }
 
+  // NEW GAME
+  function newGame() {
+    setSquare(Array(9).fill(null));
+    setXIsNext(true);
+  }
+
+  // RESET (same as new game)
+  function resetGame() {
+    newGame();
+  }
+
+  // SAVE GAME
+  function saveGame() {
+    setSavedGame({ square, xIsNext });
+  }
+
+  // CONTINUE GAME
+  function continueGame() {
+    if (savedGame) {
+      setSquare(savedGame.square);
+      setXIsNext(savedGame.xIsNext);
+    }
   }
 
   const winner = calculateWinner(square);
-  let status;
-  if (winner){
-    status = "Winner:" + winner;
-  } else{
-    status = "Next player:" + (xIsNext ? "X" : "O");
-  }
+  let status = winner 
+    ? "Winner: " + winner 
+    : "Next Player: " + (xIsNext ? "X" : "O");
 
-  function calculateWinner(square){
-     const lines =[
-      [0,1,2],
-      [0,4,8],
-      [2,4,6],
-      [3,4,5],
-      [6,7,8],
-      [0,3,6],
-      [1,4,7],
-      [2,5,8]
-     ];
-     for (let i = 0; i < lines.length; i++){
-      const[a,b,c] = lines [i];
-      if (square[a] && square[a] === square[b] && square[a] === square[c]  ){
+  function calculateWinner(square) {
+    const lines = [
+      [0,1,2], [0,4,8], [2,4,6],
+      [3,4,5], [6,7,8], [0,3,6],
+      [1,4,7], [2,5,8]
+    ];
+    for (let i = 0; i < lines.length; i++) {
+      const [a, b, c] = lines[i];
+      if (square[a] && square[a] === square[b] && square[a] === square[c]) {
         return square[a];
       }
-
-
-     }
-     return null;
-
-
+    }
+    return null;
   }
 
   return (
     <>
-    <div className='status'>{status}</div>
-    <div  className='board-row' >
+      <div className="title">Tic-Tac-Toe</div>
+      <div className='status'>{status}</div>
 
-       <Square  value={square[0]}  onSquareClick={()=>handleClick(0)}/>
-       <Square value={square[1]} onSquareClick={()=>handleClick(1)}/>
-       <Square value={square[2]} onSquareClick={()=>handleClick(2)}/>
-       </div>
-       <div className='board-row'>
-       <Square value={square[3]} onSquareClick={()=>handleClick(3)}/>
-       <Square value={square[4]} onSquareClick={()=>handleClick(4)}/>
-       <Square value={square[5]} onSquareClick={()=>handleClick(5)}/>
-       </div>
-       <div className='board-row'>
-       <Square value={square[6]} onSquareClick={()=>handleClick(6)}/>
-       <Square value={square[7]} onSquareClick={()=>handleClick(7)}/>
-       <Square value={square[8]} onSquareClick={()=>handleClick(8)}/>
+      <div className='board'>
+        {square.map((val, i) => (
+          <Square key={i} value={val} onSquareClick={() => handleClick(i)} />
+        ))}
+      </div>
 
-    </div>
-    <Button/>
-     
+      <Button 
+        newGame={newGame}
+        resetGame={resetGame}
+        continueGame={continueGame}
+        saveGame={saveGame}
+      />
     </>
   )
 }
 
-export default App
+export default App;

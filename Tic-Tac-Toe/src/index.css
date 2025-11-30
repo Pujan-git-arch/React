@@ -1,26 +1,88 @@
-.square{
-  border: 2px solid black;
-  height: 50px;
-  width: 50px;
-  text-align: center;
-  font-size:xx-large ;
-  cursor: pointer;
-  background-color: white;
-  line-height: 50px; 
-   padding: 0; 
-   outline: none;
-  vertical-align: middle;
+/* PAGE STYLE */
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #83a4d4, #b6fbff);
+  height: 100vh;
+  margin: 0;
+  font-family: "Poppins", sans-serif;
 }
-.play_button{
+
+/* TITLE */
+.title {
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #222;
+  text-align: center;
+}
+
+/* STATUS */
+.status {
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
+
+/* BOARD */
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 70px);
+  grid-gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* SQUARE BUTTONS */
+.square {
+  border: 3px solid #444;
+  height: 70px;
+  width: 70px;
+  font-size: 32px;
+  font-weight: bold;
+  cursor: pointer;
+  background: white;
+  border-radius: 10px;
+  transition: 0.2s;
+}
+
+.square:hover {
+  background: #f1f1f1;
+  transform: scale(1.05);
+}
+
+/* BUTTON WRAPPER */
+.button_wrapper {
+  text-align: center;
+}
+
+/* CONTROL BUTTONS */
+.play_button {
   margin: 10px;
   cursor: pointer;
-  font-family: Arial, Helvetica, sans-serif;
-  font-weight: 900;
-  font-size: x-large;
-  border: 2px  solid black;
-  border-radius: 30%;
-  padding: 3px 30px;
+  padding: 10px 25px;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 10px;
+  border: none;
+  background: #4CAF50;
+  color: white;
+  transition: 0.3s;
 }
-.board-row{
 
+.play_button:hover {
+  background: #45a049;
+  transform: translateY(-2px);
+}
+
+/* RESET BUTTON SPECIAL */
+.reset {
+  background: #e53935;
+}
+
+.reset:hover {
+  background: #c62828;
 }
